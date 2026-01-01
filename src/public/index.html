@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Insights Platform</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Engineering Insights Platform</h1>
+            <p class="tagline">Share meaningful work without exposing source code or confidential details</p>
+        </header>
+
+        <nav>
+            <button id="viewInsightsBtn" class="nav-btn active">View Insights</button>
+            <button id="shareInsightBtn" class="nav-btn">Share Insight</button>
+            <button id="aboutBtn" class="nav-btn">About</button>
+        </nav>
+
+        <!-- View Insights Section -->
+        <section id="viewSection" class="content-section active">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search insights...">
+                <button id="searchBtn">Search</button>
+            </div>
+            
+            <div id="insightsList" class="insights-list">
+                <!-- Insights will be loaded here dynamically -->
+            </div>
+        </section>
+
+        <!-- Share Insight Section -->
+        <section id="shareSection" class="content-section">
+            <h2>Share Your Engineering Insight</h2>
+            <p class="info-text">Focus on problems, constraints, decisions, trade-offs, and lessons learned. <strong>Do not include source code, proprietary data, or confidential details.</strong></p>
+            
+            <form id="insightForm">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" required placeholder="e.g., Choosing Between SQL and NoSQL">
+                </div>
+
+                <div class="form-group">
+                    <label for="author">Your Name (Optional)</label>
+                    <input type="text" id="author" placeholder="Anonymous">
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags (comma-separated)</label>
+                    <input type="text" id="tags" placeholder="e.g., databases, architecture, performance">
+                </div>
+
+                <h3>Context</h3>
+                <div class="form-group">
+                    <label for="domain">Domain</label>
+                    <input type="text" id="domain" placeholder="e.g., Web Development, Mobile Apps">
+                </div>
+
+                <div class="form-group">
+                    <label for="scale">Scale</label>
+                    <input type="text" id="scale" placeholder="e.g., Thousands of users, High traffic">
+                </div>
+
+                <div class="form-group">
+                    <label for="timeframe">Timeframe</label>
+                    <input type="text" id="timeframe" placeholder="e.g., 3 months, 2 week sprint">
+                </div>
+
+                <h3>Problem *</h3>
+                <div class="form-group">
+                    <label for="problemDesc">Description *</label>
+                    <textarea id="problemDesc" required rows="4" placeholder="What challenge did you face?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="impact">Impact</label>
+                    <textarea id="impact" rows="2" placeholder="Why did this matter?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="constraints">Constraints (one per line)</label>
+                    <textarea id="constraints" rows="3" placeholder="e.g., Limited time&#10;Small team&#10;Budget constraints"></textarea>
+                </div>
+
+                <h3>Approach</h3>
+                <div class="form-group">
+                    <label for="alternatives">Alternatives Considered (one per line)</label>
+                    <textarea id="alternatives" rows="3" placeholder="What options did you evaluate?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="chosen">Chosen Approach</label>
+                    <textarea id="chosen" rows="2" placeholder="What did you select?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="tradeoffs">Trade-offs (one per line)</label>
+                    <textarea id="tradeoffs" rows="3" placeholder="What did you gain vs. lose?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="reasoning">Reasoning</label>
+                    <textarea id="reasoning" rows="3" placeholder="Why did you make this choice?"></textarea>
+                </div>
+
+                <h3>Outcome</h3>
+                <div class="form-group">
+                    <label for="results">Results</label>
+                    <textarea id="results" rows="3" placeholder="What happened?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="metrics">Metrics (one per line)</label>
+                    <textarea id="metrics" rows="3" placeholder="How did you measure success? (use abstract metrics only)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="surprises">Surprises</label>
+                    <textarea id="surprises" rows="2" placeholder="What was unexpected?"></textarea>
+                </div>
+
+                <h3>Lessons Learned</h3>
+                <div class="form-group">
+                    <label for="whatWorked">What Worked (one per line)</label>
+                    <textarea id="whatWorked" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatDidnt">What Didn't Work (one per line)</label>
+                    <textarea id="whatDidnt" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="wouldDoDifferently">What You'd Do Differently (one per line)</label>
+                    <textarea id="wouldDoDifferently" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="keyTakeaways">Key Takeaways (one per line)</label>
+                    <textarea id="keyTakeaways" rows="3"></textarea>
+                </div>
+
+                <div id="formErrors" class="error-message"></div>
+
+                <button type="submit" class="submit-btn">Share Insight</button>
+            </form>
+        </section>
+
+        <!-- About Section -->
+        <section id="aboutSection" class="content-section">
+            <h2>About This Platform</h2>
+            
+            <div class="about-content">
+                <h3>Purpose</h3>
+                <p>This platform allows professionals to share meaningful engineering work publicly without exposing source code, proprietary data, or confidential details.</p>
+                
+                <h3>What to Share</h3>
+                <ul>
+                    <li><strong>Problems:</strong> The challenges you faced</li>
+                    <li><strong>Constraints:</strong> Limitations you worked within</li>
+                    <li><strong>Decisions:</strong> Choices you made and alternatives you considered</li>
+                    <li><strong>Trade-offs:</strong> What you gained and what you sacrificed</li>
+                    <li><strong>Outcomes:</strong> What happened and how you measured it</li>
+                    <li><strong>Lessons:</strong> What you learned along the way</li>
+                </ul>
+
+                <h3>What NOT to Share</h3>
+                <ul>
+                    <li>Source code or implementation details</li>
+                    <li>Proprietary algorithms or business logic</li>
+                    <li>Company-specific data or metrics</li>
+                    <li>Confidential information</li>
+                    <li>API keys, passwords, or secrets</li>
+                </ul>
+
+                <h3>Philosophy</h3>
+                <p>We believe that engineering judgment, decision-making processes, and lessons learned are more valuable than implementation details. By focusing on the "why" and "how we decided" rather than the "what exactly," we can share knowledge that helps others make better decisions in their own contexts.</p>
+
+                <h3>Low-Friction Contributions</h3>
+                <p>This platform is designed for incremental contributions. You don't need to write a complete case study in one sitting. Share small insights as you learn them. Every lesson, no matter how small, can help another engineer.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Engineering Insights Platform &copy; 2026 | Built for sharing knowledge, not code</p>
+    </footer>
+
+    <script src="/app.js"></script>
+</body>
+</html>
