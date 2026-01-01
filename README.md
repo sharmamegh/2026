@@ -159,11 +159,25 @@ This is a learning platform. To contribute:
 
 ISC License - See LICENSE file for details
 
+## 🔐 Security Considerations
+
+This is a demonstration platform. For production deployment, consider:
+
+- **Rate Limiting**: Add rate limiting middleware (e.g., `express-rate-limit`) to prevent abuse
+- **Input Sanitization**: Enhance validation beyond pattern matching
+- **Authentication**: Add user authentication and authorization
+- **HTTPS**: Use HTTPS in production
+- **Content Security Policy**: Implement CSP headers
+- **Database Security**: When adding persistent storage, use parameterized queries
+
+The current validation (code blocks, function definitions, sensitive keywords) serves as a reminder to keep content abstract but is not foolproof. Users should be mindful of what they share.
+
 ## 🌟 Future Enhancements
 
 Potential improvements for the platform:
 - Persistent database storage (PostgreSQL, MongoDB)
 - User authentication and profiles
+- Rate limiting and abuse prevention
 - Comments and discussions on insights
 - Voting/rating system
 - Advanced search and filtering

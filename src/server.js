@@ -43,6 +43,7 @@ app.get('/api', (req, res) => {
 });
 
 // Serve index.html for all non-API routes (SPA support)
+// Note: In production, consider adding rate limiting middleware to prevent abuse
 app.use((req, res, next) => {
   if (!req.path.startsWith('/api') && req.method === 'GET') {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
