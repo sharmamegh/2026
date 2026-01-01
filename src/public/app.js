@@ -224,7 +224,8 @@ function renderInsightDetails(insight) {
 // Toggle insight details
 function toggleDetails(id) {
     const details = document.getElementById(`details-${id}`);
-    const button = event.target;
+    const buttons = document.querySelectorAll(`[onclick="toggleDetails('${id}')"]`);
+    const button = buttons[0];
     
     if (details.classList.contains('expanded')) {
         details.classList.remove('expanded');
