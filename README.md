@@ -1,31 +1,13 @@
-# 2026
+# GhostWork (React + Vite)
 
-This repository is my attempt to be a **consistent developer throughout 2026**.
+Quick start
 
-The goal is not to ship one large product immediately, but to show up regularly, think clearly, and build deliberately, even if the daily progress is small.
+1. `cp .env.example .env` and fill the values:
+   - `VITE_FIREBASE_CONFIG`: JSON string for your Firebase app (wrap the whole object in quotes if editing the file manually).
+   - `VITE_APP_ID`: Any string to namespace data in Firestore.
+   - `VITE_GOOGLE_API_KEY`: Gemini API key for AI helpers (optional, app still runs without it).
+   - `VITE_INITIAL_AUTH_TOKEN`: Optional custom auth token if you use a server-issued login.
+2. Install deps: `npm install`
+3. Run locally: `npm run dev`
 
-## The project
-
-The primary project developed in this repository explores a simple but real problem:
-
-> How can developers share meaningful work publicly when most of their real-world work is confidential?
-
-The platform focuses on documenting **thinking** rather than source code — capturing problems, constraints, decisions, trade-offs, outcomes, and learnings without exposing proprietary details.
-
-## Why this repo exists
-
-- To build consistency without burnout  
-- To create public proof of work without violating confidentiality  
-- To grow as a developer through reflection and iteration  
-- To contribute something genuinely useful, not performative  
-
-## How this will evolve
-
-Progress will be incremental.  
-Some days may add code, others may add ideas, structure, or documentation.
-
-Consistency matters more than scale.
-
----
-
-⭐ Star this repository to stay updated with my progress.
+If Firebase env vars are missing, the app will run in a safe demo mode with sample data so you can still navigate the UI.
