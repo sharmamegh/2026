@@ -1,12 +1,18 @@
 .timer-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 40px 20px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 24px clamp(16px, 3vw, 32px);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
-  color: #333;
+  height: 100vh;
+  color: #f8fafc;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
 }
 
 .back-button {
@@ -61,18 +67,39 @@
 .timer-container h1 {
   text-align: center;
   color: white;
-  margin-bottom: 30px;
-  margin-top: 40px;
-  font-size: 2.5rem;
+  margin: 32px 0 8px;
+  font-size: 2.25rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.timer-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 16px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.timer-left,
+.timer-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.timer-left,
+.timer-right {
+  overflow: auto;
 }
 
 .timer-controls {
   background: white;
-  padding: 20px;
+  padding: 16px;
   border-radius: 12px;
-  margin-bottom: 30px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #111827;
 }
 
 .preset-buttons {
@@ -108,7 +135,7 @@
 
 .custom-duration label {
   font-weight: 600;
-  color: #333;
+  color: #111827;
 }
 
 .custom-duration input {
@@ -137,121 +164,63 @@
   flex-direction: column;
   align-items: center;
   background: white;
-  padding: 40px;
+  padding: 24px 20px;
   border-radius: 12px;
-  margin-bottom: 30px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  color: #111827;
+  min-height: 0;
 }
 
-.hourglass {
-  position: relative;
-  width: 150px;
-  height: 280px;
-  margin-bottom: 30px;
+.hourglass-icon {
+  width: 190px;
+  height: 320px;
+  margin-bottom: 20px;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
 }
 
-.top-bulb,
-.bottom-bulb {
-  position: absolute;
-  width: 120px;
-  height: 90px;
-  left: 15px;
-  border: 4px solid #333;
-  border-radius: 50% 50% 0 0;
-  background: rgba(200, 200, 200, 0.1);
+.glass-outline {
+  fill: rgba(255, 255, 255, 0.55);
+  stroke: #111827;
+  stroke-width: 7;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 
-.top-bulb {
-  top: 0;
-  border-radius: 50% 50% 0 0;
-}
-
-.bottom-bulb {
-  bottom: 0;
-  border-radius: 0 0 50% 50%;
-  border-top: none;
-}
-
-.sand-container {
-  position: absolute;
-  top: 90px;
-  left: 55px;
-  width: 40px;
-  height: 100px;
-  background: linear-gradient(
-    to right,
-    rgba(200, 200, 200, 0.2),
-    rgba(200, 200, 200, 0.3)
-  );
-  border: 2px solid #333;
-  border-radius: 2px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-.sand-falling {
-  background: linear-gradient(45deg, #d4a574 0%, #e8c9a0 50%, #d4a574 100%);
-  transition: height 1s linear;
-  position: relative;
-  overflow: hidden;
-}
-
-.sand-falling::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.1) 2px,
-    rgba(255, 255, 255, 0.1) 4px
-  );
-  animation: shimmer 2s infinite;
+.sand-top {
+  fill: url(#sand-gradient-top);
+  transition: height 0.3s linear, y 0.3s linear;
 }
 
 .sand-bottom {
-  background: linear-gradient(45deg, #d4a574 0%, #e8c9a0 50%, #d4a574 100%);
-  position: relative;
-  overflow: hidden;
+  fill: url(#sand-gradient-bottom);
+  transition: height 0.3s linear;
 }
 
-.sand-bottom::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.1) 2px,
-    rgba(255, 255, 255, 0.1) 4px
-  );
-  animation: shimmer 2s infinite;
+.sand-stream {
+  fill: url(#sand-gradient-top);
+  animation: stream 0.8s ease-in-out infinite;
+  transform-origin: center top;
 }
 
-@keyframes shimmer {
+@keyframes stream {
   0%,
   100% {
     opacity: 0.8;
+    transform: scaleY(1);
   }
   50% {
     opacity: 1;
+    transform: scaleY(1.1);
   }
 }
 
 /* Time Display */
 .time-display {
-  font-size: 4rem;
+  font-size: 3.5rem;
   font-weight: bold;
-  color: #667eea;
+  color: #312e81;
   font-family: "Courier New", monospace;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: 2px;
 }
@@ -262,7 +231,7 @@
   background: #e0e0e0;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .progress-fill {
@@ -278,7 +247,6 @@
   display: flex;
   gap: 15px;
   justify-content: center;
-  margin-bottom: 30px;
   flex-wrap: wrap;
 }
 
@@ -332,169 +300,57 @@ button:disabled {
 }
 
 /* Save Timer Section */
-.save-timer-section {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.save-timer-section h3 {
-  color: #333;
-  margin-bottom: 15px;
-  font-size: 1.3rem;
-}
-
-.save-controls {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.save-controls input {
-  flex: 1;
-  min-width: 200px;
-  padding: 10px 15px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
-
-.save-controls input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.save-controls button {
-  padding: 10px 25px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.save-controls button:hover {
-  background: #764ba2;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
-}
-
-/* Saved Timers */
-.saved-timers {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.saved-timers h3 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 1.3rem;
-}
-
-.timers-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
-}
-
-.timer-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 15px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
-  transition: all 0.3s ease;
-}
-
-.timer-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
-}
-
-.timer-card h4 {
-  margin: 0 0 8px 0;
-  font-size: 1.1rem;
-  word-break: break-word;
-}
-
-.timer-card p {
-  margin: 8px 0;
-  font-size: 1.5rem;
-  font-weight: bold;
-  opacity: 0.9;
-}
-
-.timer-card button {
-  width: 100%;
-  padding: 8px;
-  margin-top: 10px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  font-size: 14px;
-}
-
-.timer-card button:hover {
-  background: white;
-  color: #667eea;
-}
-
-.timer-card .btn-delete {
-  margin-top: 5px;
-  border-color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.2);
-}
-
-.timer-card .btn-delete:hover {
-  background: #ff6b6b;
-  color: white;
-}
+/* Saved timer styles removed (frontend-only timer) */
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .timer-container {
+    width: calc(100% - 24px);
+    padding: 20px;
+  }
+
+  .timer-layout {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(0, auto);
+    height: calc(100vh - 140px);
+    gap: 14px;
+  }
+
+  .hourglass-wrapper {
+    padding: 20px 16px;
+  }
+
+  .saved-timers {
+    max-height: 40vh;
+  }
+}
+
 @media (max-width: 768px) {
   .timer-container {
-    padding: 20px 10px;
+    padding: 18px 10px;
   }
 
   .timer-container h1 {
     font-size: 1.8rem;
   }
 
+  .hourglass-icon {
+    width: 160px;
+    height: 280px;
+  }
+
+  .timer-layout {
+    grid-template-columns: 1fr;
+    height: calc(100vh - 140px);
+    gap: 12px;
+  }
+
+  .timer-controls {
+    padding: 14px;
+  }
+
   .time-display {
     font-size: 3rem;
-  }
-
-  .hourglass {
-    width: 120px;
-    height: 220px;
-  }
-
-  .top-bulb,
-  .bottom-bulb {
-    width: 100px;
-    height: 70px;
-    left: 10px;
-  }
-
-  .sand-container {
-    top: 70px;
-    left: 40px;
-    width: 40px;
-    height: 80px;
   }
 
   .preset-buttons {
@@ -504,6 +360,10 @@ button:disabled {
   .preset-buttons button {
     padding: 8px 12px;
     font-size: 14px;
+  }
+
+  .saved-timers {
+    max-height: 32vh;
   }
 
   .timers-grid {
@@ -519,6 +379,11 @@ button:disabled {
   .timer-container h1 {
     font-size: 1.5rem;
     margin-bottom: 20px;
+  }
+
+  .hourglass-icon {
+    width: 140px;
+    height: 250px;
   }
 
   .time-display {

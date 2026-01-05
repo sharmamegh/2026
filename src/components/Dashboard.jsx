@@ -9,6 +9,17 @@ const Dashboard = ({ onSelectTool }) => {
       description: "Real-time countdown with animated hourglass",
       icon: "⏳",
       color: "gradient-purple",
+      compact: true,
+      selectable: true,
+    },
+    {
+      id: "coming-soon",
+      name: "More Tools",
+      description: "New utilities are on the way. Stay tuned!",
+      icon: "✨",
+      color: "gradient-purple",
+      compact: true,
+      selectable: false,
     },
   ];
 
@@ -37,17 +48,21 @@ const Dashboard = ({ onSelectTool }) => {
         {tools.map((tool) => (
           <div
             key={tool.id}
-            className={`tool-card ${tool.color}`}
-            onClick={() => handleCardClick(tool.id)}
-            onKeyDown={(e) => handleCardKeyDown(e, tool.id)}
-            role="button"
-            tabIndex={0}
+            className={`tool-card ${tool.color} ${
+              tool.compact ? "compact-card" : ""
+            } ${!tool.selectable ? "disabled-card" : ""}`}
+            onClick={() => tool.selectable && handleCardClick(tool.id)}
+            onKeyDown={(e) => tool.selectable && handleCardKeyDown(e, tool.id)}
+            role={tool.selectable ? "button" : "presentation"}
+            tabIndex={tool.selectable ? 0 : -1}
           >
             <div className="tool-icon">{tool.icon}</div>
             <h2 className="tool-name">{tool.name}</h2>
             <p className="tool-description">{tool.description}</p>
             <div className="tool-action">
-              <span className="action-text">Open</span>
+              <span className="action-text">
+                {tool.selectable ? "Open" : "Coming Soon"}
+              </span>
               <span className="action-arrow">→</span>
             </div>
           </div>
