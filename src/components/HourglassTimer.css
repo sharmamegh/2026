@@ -176,24 +176,26 @@
   height: 320px;
   margin-bottom: 20px;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+  color: #667eea;
+  transition: transform 0.6s ease;
 }
 
-.glass-outline {
-  fill: rgba(255, 255, 255, 0.55);
-  stroke: #111827;
-  stroke-width: 7;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+.hourglass-running {
+  animation: hourglass-flip 4s ease-in-out infinite;
 }
 
-.sand-top {
-  fill: url(#sand-gradient-top);
-  transition: height 0.3s linear, y 0.3s linear;
-}
-
-.sand-bottom {
-  fill: url(#sand-gradient-bottom);
-  transition: height 0.3s linear;
+@keyframes hourglass-flip {
+  0%,
+  15% {
+    transform: rotate(0deg);
+  }
+  50%,
+  65% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .sand-stream {

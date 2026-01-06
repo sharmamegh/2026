@@ -9,7 +9,9 @@ const connectDB = async () => {
     console.log(`MongoDB connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {
-    console.error(`Failed to connect to MongoDB at ${mongoUri}: ${error.message}`);
+    console.error(
+      `Failed to connect to MongoDB at ${mongoUri}: ${error.message}`
+    );
     process.exit(1);
   }
 };
