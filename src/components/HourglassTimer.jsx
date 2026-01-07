@@ -8,7 +8,6 @@ const HourglassTimer = ({ onBackToDashboard }) => {
   const [timeLeft, setTimeLeft] = useState(60);
   const [isRunning, setIsRunning] = useState(false);
 
-
   useEffect(() => {
     let interval;
     if (isRunning && timeLeft > 0) {
@@ -51,8 +50,15 @@ const HourglassTimer = ({ onBackToDashboard }) => {
     setIsRunning(false);
   };
 
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
   const progressPercent = duration > 0 ? (timeLeft / duration) * 100 : 0;
 
+  return (
     <div className="timer-container">
       <button className="back-button" onClick={onBackToDashboard}>
         ← Back to Dashboard
