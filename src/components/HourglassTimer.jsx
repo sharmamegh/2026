@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHourglass } from "@fortawesome/free-regular-svg-icons";
 import "./HourglassTimer.css";
 
 const HourglassTimer = ({ onBackToDashboard }) => {
   const [duration, setDuration] = useState(60);
   const [timeLeft, setTimeLeft] = useState(60);
   const [isRunning, setIsRunning] = useState(false);
+  const [hasFlipped, setHasFlipped] = useState(false);
+  const [isFlipping, setIsFlipping] = useState(false);
 
   useEffect(() => {
     let interval;
@@ -28,10 +28,18 @@ const HourglassTimer = ({ onBackToDashboard }) => {
     setDuration(timerDuration);
     setTimeLeft(timerDuration);
     setIsRunning(false);
+    setIsFlipped(false);
   };
 
   const handleStart = () => {
-    if (timeLeft > 0) setIsRunning(true);
+    if (timeLeft > 0) {
+      if (!hasFlipped) {
+        setIsFlipping(true);
+        setHasFlipped(true);
+        setTimeout(() => setIsFlipping(false), 650);
+      }
+      setIsRunning(true);
+    }
   };
 
   const handlePause = () => {
@@ -41,6 +49,8 @@ const HourglassTimer = ({ onBackToDashboard }) => {
   const handleReset = () => {
     setIsRunning(false);
     setTimeLeft(duration);
+    setHasFlipped(false);
+    setIsFlipping(false);
   };
 
   const handleDurationChange = (e) => {
@@ -48,6 +58,8 @@ const HourglassTimer = ({ onBackToDashboard }) => {
     setDuration(newDuration);
     setTimeLeft(newDuration);
     setIsRunning(false);
+    setHasFlipped(false);
+    setIsFlipping(false);
   };
 
   const formatTime = (seconds) => {
@@ -57,6 +69,15 @@ const HourglassTimer = ({ onBackToDashboard }) => {
   };
 
   const progressPercent = duration > 0 ? (timeLeft / duration) * 100 : 0;
+
+  const topMax = 110; // height from waist (160) up to ~50
+  const bottomMax = 120; // height from bottom (~280) up to waist (160)
+  const running = isRunning && timeLeft > 0;
+  const hasDuration = duration > 0;
+  const topFrac = hasFlipped && hasDuration ? timeLeft / duration : 0;
+  const bottomFrac = hasFlipped && hasDuration ? 1 - topFrac : 1;
+  const topHeight = Math.max(0, Math.min(topMax, topFrac * topMax));
+  const bottomHeight = Math.max(0, Math.min(bottomMax, bottomFrac * bottomMax));
 
   return (
     <div className="timer-container">
@@ -111,13 +132,75 @@ const HourglassTimer = ({ onBackToDashboard }) => {
 
         <div className="timer-right">
           <div className="hourglass-wrapper">
-            <FontAwesomeIcon
-              icon={faHourglass}
-              className={`hourglass-icon ${
-                isRunning ? "hourglass-running" : ""
-              }`}
+            <svg
+              className={`hourglass ${isFlipping ? "flip-anim" : ""}`}
+              viewBox="0 0 200 320"
+              width="200"
+              height="320"
               aria-label="Hourglass countdown animation"
-            />
+            >
+              <defs>
+                <clipPath id="topBulb">
+                  <polygon points="88,160 62,115 62,55 138,55 138,115 112,160" />
+                </clipPath>
+                <clipPath id="bottomBulb">
+                  <polygon points="88,160 62,205 62,280 138,280 138,205 112,160" />
+                </clipPath>
+                <linearGradient id="sandGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#f6d365" />
+                  <stop offset="100%" stopColor="#fda085" />
+                </linearGradient>
+                <radialGradient id="glassGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="rgba(255,255,255,0.45)" />
+                  <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+                </radialGradient>
+              </defs>
+
+              {/* Glass outline */}
+              <path
+                d="M60,40 H140 C150,40 156,46 156,56 V64 C156,90 140,110 122,130 C110,143 100,152 100,160 C100,168 110,177 122,190 C140,210 156,230 156,256 V264 C156,274 150,280 140,280 H60 C50,280 44,274 44,264 V256 C44,230 60,210 78,190 C90,177 100,168 100,160 C100,152 90,143 78,130 C60,110 44,90 44,64 V56 C44,46 50,40 60,40 Z"
+                fill="none"
+                stroke="#312e81"
+                strokeWidth="4"
+              />
+
+              {/* Glass subtle highlight */}
+              <ellipse cx="80" cy="90" rx="6" ry="14" fill="url(#glassGlow)" />
+
+              {/* Sand - top bulb (anchored at waist upward) */}
+              <g clipPath="url(#topBulb)">
+                <rect
+                  x="62"
+                  y={160 - topHeight}
+                  width="76"
+                  height={topHeight}
+                  fill="url(#sandGradient)"
+                />
+              </g>
+
+              {/* Sand - bottom bulb (anchored at bottom upward) */}
+              <g clipPath="url(#bottomBulb)">
+                <rect
+                  x="62"
+                  y={280 - bottomHeight}
+                  width="76"
+                  height={bottomHeight}
+                  fill="url(#sandGradient)"
+                />
+              </g>
+
+              {/* Falling sand stream */}
+              {running && (
+                <polygon
+                  className="sand-stream"
+                  points="98,160 102,160 100,208"
+                  fill="url(#sandGradient)"
+                />
+              )}
+
+              {/* Waist ring */}
+              <circle cx="100" cy="160" r="3" fill="#f6d365" />
+            </svg>
 
             <div className="time-display">{formatTime(timeLeft)}</div>
             <div className="progress-bar">

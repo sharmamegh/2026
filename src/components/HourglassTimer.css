@@ -171,35 +171,31 @@
   min-height: 0;
 }
 
-.hourglass-icon {
+.hourglass {
   width: 190px;
   height: 320px;
   margin-bottom: 20px;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
-  color: #667eea;
-  transition: transform 0.6s ease;
+  transition: transform 0.8s ease;
 }
 
-.hourglass-running {
-  animation: hourglass-flip 4s ease-in-out infinite;
+.hourglass.flip-anim {
+  animation: hourglass-flip-once 0.65s ease-in-out both;
 }
 
-@keyframes hourglass-flip {
-  0%,
-  15% {
+@keyframes hourglass-flip-once {
+  0% {
     transform: rotate(0deg);
   }
-  50%,
-  65% {
+  50% {
     transform: rotate(180deg);
   }
   100% {
-    transform: rotate(360deg);
+    transform: rotate(0deg);
   }
 }
 
 .sand-stream {
-  fill: url(#sand-gradient-top);
   animation: stream 0.8s ease-in-out infinite;
   transform-origin: center top;
 }
