@@ -169,6 +169,31 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   color: #111827;
   min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hourglass-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #667eea, transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(100%);
+  }
 }
 
 .hourglass {
@@ -176,39 +201,166 @@
   height: 320px;
   margin-bottom: 20px;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
-  transition: transform 0.8s ease;
+  transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.hourglass.celebrate {
+  animation: celebrate-bounce 0.6s ease-in-out;
+}
+
+@keyframes celebrate-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  50% {
+    transform: scale(0.95) rotate(-5deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(3deg);
+  }
 }
 
 .hourglass.flip-anim {
-  animation: hourglass-flip-once 0.65s ease-in-out both;
+  animation: hourglass-flip-once 0.65s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+    both;
 }
 
 @keyframes hourglass-flip-once {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) scale(1);
   }
   50% {
-    transform: rotate(180deg);
+    transform: rotate(180deg) scale(1.1);
   }
   100% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) scale(1);
   }
 }
 
 .sand-stream {
-  animation: stream 0.8s ease-in-out infinite;
-  transform-origin: center top;
+  animation: stream 1.5s ease-in-out infinite;
+  transform-origin: center 160px;
 }
 
 @keyframes stream {
   0%,
   100% {
-    opacity: 0.8;
-    transform: scaleY(1);
+    opacity: 0.75;
+    transform: scaleY(1) scaleX(1) translateY(0);
+  }
+  25% {
+    opacity: 0.9;
+    transform: scaleY(1.08) scaleX(0.96) translateY(1px);
   }
   50% {
     opacity: 1;
-    transform: scaleY(1.1);
+    transform: scaleY(1.15) scaleX(0.92) translateY(0);
+  }
+  75% {
+    opacity: 0.9;
+    transform: scaleY(1.08) scaleX(1.04) translateY(1px);
+  }
+}
+
+/* Sand particle animations */
+.sand-particle {
+  animation: particle-fall 0.8s ease-in infinite;
+}
+
+@keyframes particle-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(0) scale(0.3);
+  }
+  10% {
+    opacity: 0.8;
+    transform: translateY(3px) translateX(0.5px) scale(1);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(15px) translateX(-0.5px) scale(1.1);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(28px) translateX(0.8px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(40px) translateX(0) scale(0.2);
+  }
+}
+
+/* Celebration particle animations */
+.celebration-particle {
+  animation: particle-float 2s ease-out forwards;
+}
+
+/* Caustic light shimmer effect */
+.caustic-shimmer {
+  animation: caustic-pulse 3s ease-in-out infinite;
+}
+
+@keyframes caustic-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+
+/* Low-time waist alert pulse */
+.waist-alert {
+  animation: waist-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes waist-pulse {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .hourglass,
+  .hourglass.flip-anim,
+  .sand-stream,
+  .sand-particle,
+  .celebration-particle,
+  .caustic-shimmer,
+  .waist-alert {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@keyframes particle-float {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(calc(var(--vx, 1) * 20px), calc(var(--vy, 1) * 20px))
+      scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--vx, 1) * 40px), calc(var(--vy, 1) * 40px))
+      scale(0.5);
   }
 }
 
@@ -221,6 +373,11 @@
   margin-bottom: 12px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: 2px;
+  transition: color 0.5s ease, transform 0.3s ease;
+}
+
+.time-display:hover {
+  transform: scale(1.05);
 }
 
 .progress-bar {
@@ -234,10 +391,22 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+  background-size: 200% 100%;
   transition: width 1s linear;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(102, 126, 234, 0.6);
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 /* Action Buttons */
@@ -270,31 +439,20 @@
   box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
 }
 
-.btn-pause {
-  background: #f59e0b;
-  color: white;
+.sand-particle {
+  animation: particle-freefall var(--dur, 1.2s) linear infinite;
+  will-change: transform, opacity;
 }
 
-.btn-pause:hover:not(:disabled) {
-  background: #d97706;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
-}
-
-.btn-reset {
-  background: #ef4444;
-  color: white;
-}
-
-.btn-reset:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+@keyframes particle-freefall {
+  0% {
+    opacity: 0.9;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0.7;
+    transform: translate(var(--dx, 0.6px), 50px) scale(1);
+  }
 }
 
 /* Save Timer Section */
