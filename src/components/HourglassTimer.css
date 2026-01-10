@@ -266,31 +266,26 @@
   }
 }
 
-/* Sand particle animations */
+/* Sand particle animations - fine-grained free fall */
 .sand-particle {
-  animation: particle-fall 0.8s ease-in infinite;
+  animation: particle-freefall var(--dur, 1.2s) linear infinite;
+  will-change: transform, opacity;
 }
 
-@keyframes particle-fall {
+@keyframes particle-freefall {
   0% {
     opacity: 0;
-    transform: translateY(0) translateX(0) scale(0.3);
+    transform: translate(var(--sx, 0px), 0) scale(0.8);
   }
-  10% {
-    opacity: 0.8;
-    transform: translateY(3px) translateX(0.5px) scale(1);
+  5% {
+    opacity: 0.9;
   }
-  40% {
-    opacity: 1;
-    transform: translateY(15px) translateX(-0.5px) scale(1.1);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(28px) translateX(0.8px) scale(1);
+  95% {
+    opacity: 0.7;
   }
   100% {
     opacity: 0;
-    transform: translateY(40px) translateX(0) scale(0.2);
+    transform: translate(var(--dx, 0.6px), 50px) scale(1);
   }
 }
 
@@ -333,6 +328,23 @@
   }
 }
 
+/* Milestone marker subtle pulse */
+.milestone-marker {
+  animation: milestone-glow 2s ease-in-out infinite;
+}
+
+@keyframes milestone-glow {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.3);
+  }
+}
+
 /* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {
   .hourglass,
@@ -341,7 +353,8 @@
   .sand-particle,
   .celebration-particle,
   .caustic-shimmer,
-  .waist-alert {
+  .waist-alert,
+  .milestone-marker {
     animation: none !important;
     transition: none !important;
   }
@@ -439,20 +452,31 @@
   box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
 }
 
-.sand-particle {
-  animation: particle-freefall var(--dur, 1.2s) linear infinite;
-  will-change: transform, opacity;
+.btn-pause {
+  background: #f59e0b;
+  color: white;
 }
 
-@keyframes particle-freefall {
-  0% {
-    opacity: 0.9;
-    transform: translate(0, 0) scale(1);
-  }
-  100% {
-    opacity: 0.7;
-    transform: translate(var(--dx, 0.6px), 50px) scale(1);
-  }
+.btn-pause:hover:not(:disabled) {
+  background: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+}
+
+.btn-reset {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-reset:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Save Timer Section */

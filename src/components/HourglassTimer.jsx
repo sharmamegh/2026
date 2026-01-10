@@ -105,6 +105,11 @@ const HourglassTimer = ({ onBackToDashboard }) => {
   const bottomHeight = Math.max(0, Math.min(bottomMax, bottomFrac * bottomMax));
   const isLow = hasDuration && hasFlipped && timeLeft / duration <= 0.1;
 
+  // Time milestone markers
+  const progress = hasDuration ? (duration - timeLeft) / duration : 0;
+  const milestones = [0.25, 0.5, 0.75];
+  const recentMilestone = milestones.filter((m) => progress >= m).pop() ?? null;
+
   // Dynamic stream width based on sand remaining
   const streamWidth = hasFlipped ? 2 + topFrac * 2.5 : 3;
   const streamFlowRate = hasFlipped ? 0.8 + topFrac * 0.5 : 1;
@@ -185,20 +190,20 @@ const HourglassTimer = ({ onBackToDashboard }) => {
             >
               <defs>
                 <clipPath id="topBulb">
-                  {/* Precise top bulb shape matching glass outline */}
-                  <path d="M88,160 L62,115 C62,105 62,80 62,65 C62,58 64,55 66,55 L134,55 C136,55 138,58 138,65 C138,80 138,105 138,115 L112,160 Z" />
+                  {/* Precise top bulb shape matching glass outline exactly */}
+                  <path d="M100,160 C90,143 78,130 64,106 C52,90 48,70 48,60 C48,50 52,44 60,44 H140 C148,44 152,50 152,60 C152,70 148,90 136,106 C122,130 110,143 100,160 Z" />
                 </clipPath>
                 <clipPath id="topBulbInset">
-                  {/* Inset top bulb with slight waist taper */}
-                  <path d="M88,160 L68,118 C70,98 78,80 92,66 L108,66 C122,80 130,98 132,118 L112,160 Z" />
+                  {/* Inset top bulb matching glass curve precisely (4px inset from stroke) */}
+                  <path d="M100,160 C92,146 83,135 72,115 C62,98 56,76 56,64 C56,55 58,51 64,51 H136 C142,51 144,55 144,64 C144,76 138,98 128,115 C117,135 108,146 100,160 Z" />
                 </clipPath>
                 <clipPath id="bottomBulb">
-                  {/* Precise bottom bulb shape matching glass outline */}
-                  <path d="M88,160 L62,205 C62,215 62,240 62,255 C62,265 62,275 62,278 L62,278 C62,279 63,280 65,280 L135,280 C137,280 138,279 138,278 C138,275 138,265 138,255 C138,240 138,215 138,205 L112,160 Z" />
+                  {/* Precise bottom bulb shape matching glass outline exactly */}
+                  <path d="M100,160 C110,177 122,190 136,214 C148,230 152,250 152,260 C152,270 148,276 140,276 H60 C52,276 48,270 48,260 C48,250 52,230 64,214 C78,190 90,177 100,160 Z" />
                 </clipPath>
                 <clipPath id="bottomBulbInset">
-                  {/* Inset bottom bulb with slight waist taper */}
-                  <path d="M88,160 L68,202 C70,230 76,258 80,272 L120,272 C124,258 130,230 132,202 L112,160 Z" />
+                  {/* Inset bottom bulb matching glass curve precisely (4px inset from stroke) */}
+                  <path d="M100,160 C108,174 117,185 128,205 C138,222 144,244 144,256 C144,265 142,269 136,269 H64 C58,269 56,265 56,256 C56,244 62,222 72,205 C83,185 92,174 100,160 Z" />
                 </clipPath>
                 <clipPath id="sandStream">
                   {/* Narrow stream clip path */}
@@ -350,19 +355,24 @@ const HourglassTimer = ({ onBackToDashboard }) => {
               )}
 
               {/* Sand - top bulb with texture */}
-              {/* Sand - top bulb with curved surface */}
+              {/* Sand - top bulb with curved surface matching glass shape */}
               <g clipPath="url(#topBulbInset)">
                 {hasFlipped && topHeight > 0 && (
                   <>
-                    {/* Main sand body with curved top surface */}
+                    {/* Main sand body with curved top surface following bulb contour */}
                     <path
                       d={`
-                        M 62 160
-                        L 62 ${160 - topHeight}
-                        Q 100 ${160 - topHeight + 5} 138 ${160 - topHeight}
-                        L 138 160
-                        L 112 160
-                        L 88 160
+                        M 56 160
+                        L 56 ${Math.max(51, 160 - topHeight)}
+                        C 65 ${Math.max(51, 160 - topHeight) - 1.5} 82 ${
+                        Math.max(49, 160 - topHeight) - 4
+                      } 100 ${Math.max(48, 160 - topHeight) - 5}
+                        C 118 ${Math.max(49, 160 - topHeight) - 4} 135 ${
+                        Math.max(51, 160 - topHeight) - 1.5
+                      } 144 ${Math.max(51, 160 - topHeight)}
+                        L 144 160
+                        C 138 160 118 160 100 160
+                        C 82 160 62 160 56 160
                         Z
                       `}
                       fill="url(#sandGradient)"
@@ -402,21 +412,24 @@ const HourglassTimer = ({ onBackToDashboard }) => {
               </g>
 
               {/* Sand - bottom bulb with texture */}
-              {/* Sand - bottom bulb with conical accumulation */}
+              {/* Sand - bottom bulb with conical accumulation matching glass shape */}
               <g clipPath="url(#bottomBulbInset)">
                 {hasFlipped && bottomHeight > 0 && (
                   <>
-                    {/* Main sand body with conical top */}
+                    {/* Main sand body with conical top following bulb contour */}
                     <path
                       d={`
-                        M 62 280
-                        L 62 ${280 - bottomHeight + 5}
-                        Q 100 ${280 - bottomHeight - 5} 138 ${
-                        280 - bottomHeight + 5
-                      }
-                        L 138 280
-                        L 112 270
-                        Q 100 275 88 270
+                        M 56 269
+                        L 56 ${Math.max(160, 269 - bottomHeight)}
+                        C 65 ${Math.max(160, 269 - bottomHeight) + 1.5} 82 ${
+                        Math.max(160, 269 - bottomHeight) + 4
+                      } 100 ${Math.max(160, 269 - bottomHeight) + 5}
+                        C 118 ${Math.max(160, 269 - bottomHeight) + 4} 135 ${
+                        Math.max(160, 269 - bottomHeight) + 1.5
+                      } 144 ${Math.max(160, 269 - bottomHeight)}
+                        L 144 269
+                        C 135 269 118 269 100 269
+                        C 82 269 65 269 56 269
                         Z
                       `}
                       fill="url(#sandGradientBottom)"
@@ -426,13 +439,13 @@ const HourglassTimer = ({ onBackToDashboard }) => {
                     {bottomHeight > 15 && (
                       <path
                         d={`
-                          M 95 ${280 - bottomHeight}
-                          Q 100 ${280 - bottomHeight - 8} 105 ${
-                          280 - bottomHeight
-                        }
-                          Q 100 ${280 - bottomHeight + 2} 95 ${
-                          280 - bottomHeight
-                        }
+                          M 96 ${269 - bottomHeight}
+                          C 98 ${269 - bottomHeight - 7} 102 ${
+                          269 - bottomHeight - 7
+                        } 104 ${269 - bottomHeight}
+                          C 102 ${269 - bottomHeight + 1.5} 98 ${
+                          269 - bottomHeight + 1.5
+                        } 96 ${269 - bottomHeight}
                           Z
                         `}
                         fill="#ff9a56"
@@ -490,21 +503,25 @@ const HourglassTimer = ({ onBackToDashboard }) => {
                     />
                     {/* Fine-grained free-fall particles */}
                     {Array.from({ length: streamParticleCount }).map((_, i) => {
-                      const dx = Math.sin(i * 1.73) * 1.2; // per-particle drift
-                      const r = 0.4 + ((i * 37) % 6) * 0.12; // small size variation
-                      const dur =
-                        (0.9 + ((i * 29) % 10) * 0.1) / streamFlowRate; // 0.9s–1.9s
-                      const delay = ((i * 17) % 8) * 0.1; // 0–0.7s
+                      const spawnX = Math.sin(i * 2.1) * 1.8; // spawn offset
+                      const dx =
+                        Math.sin(i * 1.73) * 1.5 + Math.cos(i * 0.9) * 0.8; // drift with turbulence
+                      const r = 0.35 + ((i * 37) % 7) * 0.1; // size 0.35-1.05px
+                      const speedVar = 0.85 + ((i * 23) % 8) * 0.15; // 0.85x-1.95x speed
+                      const dur = 1.1 / speedVar / streamFlowRate; // variable duration
+                      const delay = ((i * 17) % 10) * 0.09; // 0–0.81s stagger
                       return (
                         <circle
                           key={`stream-${i}`}
                           className="sand-particle"
-                          cx={100}
+                          cx={100 + spawnX}
                           cy={160}
                           r={r}
                           fill="#f6d365"
-                          opacity="0.9"
+                          opacity="0.85"
                           style={{
+                            // CSS custom properties: --sx controls spawn offset; --dx controls drift offset
+                            "--sx": spawnX + "px",
                             "--dx": dx + "px",
                             "--dur": dur + "s",
                             animationDelay: `${delay}s`,
@@ -546,6 +563,30 @@ const HourglassTimer = ({ onBackToDashboard }) => {
                   fill="none"
                   stroke="#f6d365"
                   strokeWidth="1.5"
+                />
+              )}
+
+              {/* Sand accumulation ring at bottom when sand present */}
+              {hasFlipped && bottomHeight > 25 && (
+                <ellipse
+                  cx="100"
+                  cy={282 - bottomHeight * 0.15}
+                  rx={18 + bottomHeight * 0.12}
+                  ry="2"
+                  fill="#ff9a56"
+                  opacity="0.25"
+                />
+              )}
+
+              {/* Time milestone progress indicators on glass */}
+              {hasFlipped && recentMilestone && (
+                <circle
+                  cx="140"
+                  cy={120 + recentMilestone * 80}
+                  r="2"
+                  fill="#667eea"
+                  opacity="0.6"
+                  className="milestone-marker"
                 />
               )}
             </svg>
